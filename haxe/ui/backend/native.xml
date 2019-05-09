@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<native>
+    <component id="haxe.ui.components.Button" class="qt.widgets.PushButton" allowChildren="false" allowPadding="true">
+        <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
+        <behaviour id="disabled" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+    </component>    
+    <component id="haxe.ui.components.CheckBox" class="qt.widgets.CheckBox" allowChildren="false">
+        <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
+        <behaviour id="selected" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="checked" />
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+    </component>    
+    <component id="haxe.ui.components.OptionBox" class="qt.widgets.RadioButton" allowChildren="false">
+        <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
+        <behaviour id="selected" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="checked" />
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+    </component>    
+    <component id="haxe.ui.components.Image" class="qt.widgets.Label" allowChildren="false">
+        <behaviour id="resource" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="pixmapResource" />
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+    </component>    
+    <component id="haxe.ui.components.HorizontalSlider" class="qt.widgets.Slider" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="horizontal">
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="min" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="max" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="end" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
+    </component>    
+    <component id="haxe.ui.components.VerticalSlider" class="qt.widgets.Slider" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="vertical">
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="min" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="max" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="end" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
+    </component>    
+    <component id="haxe.ui.components.HorizontalProgress" class="qt.widgets.ProgressBar" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="horizontal">
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="min" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="max" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="end" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
+    </component>    
+    <component id="haxe.ui.components.VerticalProgress" class="qt.widgets.ProgressBar" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="vertical">
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="min" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="max" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="end" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
+    </component>    
+    <component id="haxe.ui.containers.ScrollView" class="qt.widgets.ScrollArea" initializers="haxe.ui.backend.qt.initializers.ScrollAreaInitializer">
+        <builder class="haxe.ui.backend.qt.builders.ScrollViewBuilder" />
+    </component>    
+    <component id="haxe.ui.containers.TabView" class="qt.widgets.TabWidget">
+        <builder class="haxe.ui.backend.qt.builders.TabViewBuilder" />
+    </component>    
+</native>

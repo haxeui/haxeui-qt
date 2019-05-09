@@ -1,0 +1,13 @@
+-lib hxQt
+
+--macro include("qt.core")
+--macro include("qt.gui")
+--macro include("qt.layout")
+--macro include("qt.proxy")
+--macro include("qt.styles")
+--macro include("qt.widgets")
+
+--macro include("haxe.ui.backend.qt.behaviours")
+--macro include("haxe.ui.backend.qt.initializers")
+--macro include("haxe.ui.backend.qt.size")
+--macro include("haxe.ui.backend.qt.builders")

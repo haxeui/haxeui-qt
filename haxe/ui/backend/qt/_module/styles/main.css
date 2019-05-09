@@ -1,0 +1,11 @@
+* {
+    native: true;
+}
+
+.button, .progress, .slider, .vertical-slider, .horizontal-slider, .vertical-progress, .horizontal-progress, .scrollview, .scrollview-contents {
+    background: none;
+    border: none;
+    border-radius: none;
+    color: none;
+    padding: none;
+}
