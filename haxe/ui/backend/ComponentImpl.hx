@@ -2,7 +2,6 @@ package haxe.ui.backend;
 
 import haxe.ui.backend.qt.StyleHelper;
 import haxe.ui.backend.qt.initializers.Initializer;
-import haxe.ui.core.Component;
 import haxe.ui.core.Screen;
 import haxe.ui.styles.Style;
 import qt.widgets.ScrollArea;
@@ -11,21 +10,20 @@ import qt.widgets.Widget;
 
 class ComponentImpl extends ComponentBase {
     public var widget:Widget;
-    public var parentWidget:Widget;
     
     public override function handleReady() {
-        if (Std.is(this.parentWidget, ScrollArea)) { // special case for scrollarea
-            createWidget(cast(this.parentWidget, ScrollArea).widget);
-            cast(this.parentWidget, ScrollArea).widget.adjustSize();
-        } else if (Std.is(this.parentWidget, TabWidget)) { // special case for tab
-            createWidget(this.parentWidget);
-            cast(this.parentWidget, TabWidget).addTab(this.widget, this.text);
+        if (parentComponent == null) {
+            createWidget();
         } else {
-            createWidget(this.parentWidget);
-        }
-        for (c in childComponents) {
-            c.parentWidget = this.widget;
-            c.handleReady();
+            if (Std.is(parentComponent.widget, ScrollArea)) { // special case for scrollarea
+                createWidget(cast(parentComponent.widget, ScrollArea).widget);
+                cast(parentComponent.widget, ScrollArea).widget.adjustSize();
+            } else if (Std.is(parentComponent.widget, TabWidget)) { // special case for tab
+                createWidget(parentComponent.widget);
+                cast(parentComponent.widget, TabWidget).addTab(this.widget, this.text);
+            } else {
+                createWidget(parentComponent.widget);
+            }
         }
     }
     
@@ -56,17 +54,6 @@ class ComponentImpl extends ComponentBase {
         }
         
         widget.show();
-    }
-    
-    private override function handleAddComponent(child:Component):Component {
-        //child.ready();
-        //cast(this, Component).ready();
-        if (this.isReady == true) {
-            //createWidget(this.parentWidget);
-            child.parentWidget = this.widget;
-        }
-        
-        return child;
     }
     
     private override function handlePosition(left:Null<Float>, top:Null<Float>, style:Style):Void {

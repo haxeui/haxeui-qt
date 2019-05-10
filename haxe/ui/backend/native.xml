@@ -51,6 +51,6 @@
         <builder class="haxe.ui.backend.qt.builders.ScrollViewBuilder" />
     </component>    
     <component id="haxe.ui.containers.TabView" class="qt.widgets.TabWidget">
-        <builder class="haxe.ui.backend.qt.builders.TabViewBuilder" />
+        <size class="haxe.ui.backend.qt.size.TabWidgetSize" includePadding="false" />
     </component>    
 </native>
