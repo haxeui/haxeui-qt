@@ -5,6 +5,11 @@
         <behaviour id="disabled" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
         <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
     </component>    
+    <component id="haxe.ui.components.Label" class="qt.widgets.Label" allowChildren="false" allowPadding="true">
+        <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
+        <behaviour id="disabled" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+    </component>    
     <component id="haxe.ui.components.CheckBox" class="qt.widgets.CheckBox" allowChildren="false">
         <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
         <behaviour id="selected" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="checked" />
@@ -21,16 +26,18 @@
     </component>    
     <component id="haxe.ui.components.HorizontalSlider" class="qt.widgets.Slider" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="horizontal">
         <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="start" class="haxe.ui.behaviours.DataBehaviour" />
         <behaviour id="min" class="haxe.ui.behaviours.DataBehaviour" />
         <behaviour id="max" class="haxe.ui.behaviours.DataBehaviour" />
-        <behaviour id="end" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="end" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
         <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
     </component>    
     <component id="haxe.ui.components.VerticalSlider" class="qt.widgets.Slider" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="vertical">
         <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="start" class="haxe.ui.behaviours.DataBehaviour" />
         <behaviour id="min" class="haxe.ui.behaviours.DataBehaviour" />
         <behaviour id="max" class="haxe.ui.behaviours.DataBehaviour" />
-        <behaviour id="end" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="end" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
         <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
     </component>    
     <component id="haxe.ui.components.HorizontalProgress" class="qt.widgets.ProgressBar" allowChildren="false" initializers="haxe.ui.backend.qt.initializers.OrientationInitializer" orientation="horizontal">
@@ -48,7 +55,15 @@
         <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
     </component>    
     <component id="haxe.ui.containers.ScrollView" class="qt.widgets.ScrollArea" initializers="haxe.ui.backend.qt.initializers.ScrollAreaInitializer">
-        <builder class="haxe.ui.backend.qt.builders.ScrollViewBuilder" />
+        <builder111 class="haxe.ui.backend.qt.builders.ScrollViewBuilder" />
+        <behaviour id="contentLayoutName" class="haxe.ui.behaviours.DefaultBehaviour" />
+        <size class="haxe.ui.backend.qt.size.ScrollAreaSize" includePadding="false" />
+    </component>    
+    <component id="haxe.ui.containers.ListView" class="qt.widgets.ListWidget">
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="contentLayoutName" class="haxe.ui.behaviours.DefaultBehaviour" />
+        <behaviour id="dataSource" class="haxe.ui.backend.qt.behaviours.ListWidgetDataSource" />
+        <behaviour id="selectedIndex" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="selectedRow" />
     </component>    
     <component id="haxe.ui.containers.TabView" class="qt.widgets.TabWidget">
         <size class="haxe.ui.backend.qt.size.TabWidgetSize" includePadding="false" />

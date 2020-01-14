@@ -1,11 +1,12 @@
 package haxe.ui.backend.qt.size;
+import qt.widgets.TabWidget;
 
 class TabWidgetSize extends WidgetSize {
     private override function get_usableWidthModifier():Float {
-        return component.widget.childrenRect.width;
+        return 15; // TODO: calc
     }
     
     private override function get_usableHeightModifier():Float {
-        return component.widget.childrenRect.height;
+        return 28; // TODO: calc
     }
 }

@@ -18,11 +18,8 @@ class ScreenImpl extends ScreenBase {
     }
     
     public override function addComponent(component:Component) {
-        trace(width);
         _topLevelComponents.push(component);
-        //component.ready();
         resizeComponent(component);
-        trace("TRYING TO ADD: " + component);
         if (options.mainWindow.onResize == null) {
             options.mainWindow.onResize = onMainWindowResized;
         }
@@ -30,6 +27,7 @@ class ScreenImpl extends ScreenBase {
     
     private function onMainWindowResized() {
         for (c in _topLevelComponents) {
+            trace("----------------------------- RESIZE");
             resizeComponent(c);
         }
     }

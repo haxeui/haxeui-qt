@@ -2,10 +2,14 @@
     native: true;
 }
 
-.button, .progress, .slider, .vertical-slider, .horizontal-slider, .vertical-progress, .horizontal-progress, .scrollview, .scrollview-contents {
+.button, .progress, .slider, .vertical-slider, .horizontal-slider, .vertical-progress, .horizontal-progress, .scrollview, .scrollview-contents, .tabview, .tabview-content {
     background: none;
     border: none;
     border-radius: none;
     color: none;
     padding: none;
+}
+
+.scrollview-contents, .tabview-content {
+    padding: 5px;
 }

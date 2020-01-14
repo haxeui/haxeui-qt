@@ -9,8 +9,8 @@ class CallLaterImpl extends Object {
     public function new(fn:Void->Void) {
         super();
         _fn = fn;
-        Screen.instance.options.app.postEvent(this, new Event(1234));
-        //fn();
+        //Screen.instance.options.app.postEvent(this, new Event(1234));
+        fn();
     }
     
     public override function event(event:Event) {
