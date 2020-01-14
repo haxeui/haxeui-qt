@@ -13,3 +13,11 @@
 .scrollview-contents, .tabview-content {
     padding: 5px;
 }
+
+.listview .listview-contents {
+    padding: 0px;
+}
+
+.listview .even:selected, .listview .odd:selected {
+    background-color: platform-color(highlight);
+}

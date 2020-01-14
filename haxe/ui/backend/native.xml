@@ -4,6 +4,7 @@
         <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
         <behaviour id="disabled" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
         <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <signal id="click" slot="connectClicked" mapTo="onMouseClickedSlot" />
     </component>    
     <component id="haxe.ui.components.Label" class="qt.widgets.Label" allowChildren="false" allowPadding="true">
         <behaviour id="text" class="haxe.ui.backend.qt.behaviours.ReflectProperty" />
@@ -64,6 +65,7 @@
         <behaviour id="contentLayoutName" class="haxe.ui.behaviours.DefaultBehaviour" />
         <behaviour id="dataSource" class="haxe.ui.backend.qt.behaviours.ListWidgetDataSource" />
         <behaviour id="selectedIndex" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="selectedRow" />
+        <size111 class="haxe.ui.backend.qt.size.ScrollAreaSize" includePadding="false" />
     </component>    
     <component id="haxe.ui.containers.TabView" class="qt.widgets.TabWidget">
         <size class="haxe.ui.backend.qt.size.TabWidgetSize" includePadding="false" />

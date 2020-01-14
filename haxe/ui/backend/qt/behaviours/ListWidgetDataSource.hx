@@ -12,7 +12,7 @@ class ListWidgetDataSource extends DataBehaviour {
         if (_component.widget == null) {
             return;
         }
-return;
+
         var widget:ListWidget = cast(_component.widget, ListWidget);
         widget.clear();
         

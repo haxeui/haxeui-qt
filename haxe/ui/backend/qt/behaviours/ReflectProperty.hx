@@ -20,7 +20,11 @@ class ReflectProperty extends DataBehaviour {
         }
         */
         
-        Reflect.setProperty(_component.widget, targetProp, Variant.toDynamic(_value));
-        _component.widget.adjustSize();
+        try {
+            Reflect.setProperty(_component.widget, targetProp, Variant.toDynamic(_value));
+            _component.widget.adjustSize();
+        } catch (e:Dynamic) {
+            trace("WARNING: problem setting " + Type.getClassName(Type.getClass(_component.widget)) + "." + targetProp + " property (" + e + ")");
+        }
     }
 }

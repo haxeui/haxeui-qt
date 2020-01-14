@@ -1,5 +1,6 @@
 package haxe.ui.backend;
 
+import haxe.ui.backend.qt.EventMapper;
 import haxe.ui.backend.qt.StyleHelper;
 import haxe.ui.backend.qt.initializers.Initializer;
 import haxe.ui.core.Component;
@@ -7,6 +8,9 @@ import haxe.ui.core.Screen;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.events.UIEvent;
 import haxe.ui.styles.Style;
+import qt.core.Event;
+import qt.core.Object;
+import qt.proxy.EventFilterProxy;
 import qt.widgets.ScrollArea;
 import qt.widgets.TabWidget;
 import qt.widgets.Widget;
@@ -31,7 +35,7 @@ class ComponentImpl extends ComponentBase {
             if (Std.is(parentComponent.widget, ScrollArea)) { // special case for scrollarea
                 createWidget(cast(parentComponent.widget, ScrollArea).widget, false);
                 cast(parentComponent.widget, ScrollArea).widget = widget;
-                cast(parentComponent.widget, ScrollArea).widget.adjustSize();
+                //cast(parentComponent.widget, ScrollArea).widget.adjustSize();
             } else if (Std.is(parentComponent.widget, TabWidget)) { // special case for tab
                 createWidget(parentComponent.widget, false);
                 cast(this, Component).addClass("tabview-content");
@@ -40,6 +44,10 @@ class ComponentImpl extends ComponentBase {
                 createWidget(parentComponent.widget);
             }
         }
+    }
+    
+    private override function get_isNativeScroller():Bool {
+        return Std.is(widget, ScrollArea);
     }
     
     public function createWidget(parent:Widget = null, setParent:Bool = true) {
@@ -52,13 +60,19 @@ class ComponentImpl extends ComponentBase {
         var className:String = Type.getClassName(Type.getClass(this));
         var nativeComponentClass:String = Toolkit.nativeConfig.query('component[id=${className}].@class', 'qt.widgets.Widget', this);
         
+        var initializers:String = null;
+        if (className == "haxe.ui.containers.ListView" && (cast(this, Component).native == false || cast(this, Component).native == null)) {
+            nativeComponentClass = "qt.widgets.ScrollArea";
+            initializers = "haxe.ui.backend.qt.initializers.ScrollAreaInitializer";
+        }
+        
         var params = [];
         widget = Type.createInstance(Type.resolveClass(nativeComponentClass), params);
         if (setParent == true) {
             widget.parent = parent;
         }
         
-        var initializers:String = Toolkit.nativeConfig.query('component[id=${className}].@initializers', null, this);       
+        initializers = Toolkit.nativeConfig.query('component[id=${className}].@initializers', initializers, this);       
         if (initializers != null) {
             for (i in initializers.split(";")) {
                 i = StringTools.trim(i);
@@ -82,13 +96,14 @@ class ComponentImpl extends ComponentBase {
         }
         
         // TODO: not good at all! Need to work out when a widget is "ready" from a qt perspective
-        haxe.ui.util.Timer.delay(function() {
-            if (parentComponent != null) {
-                parentComponent.invalidateComponentLayout();
-            }
-            //invalidateComponentLayout();
-        }, 50);
-        
+        if (parentComponent != null && Std.is(parentComponent.widget, ScrollArea)) {
+            haxe.ui.util.Timer.delay(function() {
+                if (parentComponent != null) {
+                    parentComponent.invalidateComponentLayout();
+                }
+                //invalidateComponentLayout();
+            }, 50);
+        }
     }
     
     private override function handlePosition(left:Null<Float>, top:Null<Float>, style:Style):Void {
@@ -97,6 +112,14 @@ class ComponentImpl extends ComponentBase {
         }
         
         widget.move(Std.int(left), Std.int(top));
+    }
+    
+    private override function handleVisibility(show:Bool) {
+        if (widget == null) {
+            return;
+        }
+        
+        widget.visible = show;
     }
     
     private override function handleSize(width:Null<Float>, height:Null<Float>, style:Style) {
@@ -149,18 +172,109 @@ class ComponentImpl extends ComponentBase {
             return;
         }
         
+        var className:String = Type.getClassName(Type.getClass(this));
+        var slot:String = Toolkit.nativeConfig.query('component[id=${className}].signal[id=${type}].@slot', null, this); 
+        if (slot != null) {
+            var mapTo:String = Toolkit.nativeConfig.query('component[id=${className}].signal[id=${type}].@mapTo', null, this); 
+            if (mapTo != null) {
+                if (_eventMap.exists(type) == false) {
+                    _eventMap.set(type, listener);
+                    Reflect.callMethod(widget, Reflect.field(widget, slot), [Reflect.field(this, mapTo)]);
+                }
+            }
+        }
+        
         switch (type) {
             case MouseEvent.CLICK:
                 if (_eventMap.exists(type) == false) {
                     _eventMap.set(type, listener);
-                    if (Std.is(widget, qt.widgets.PushButton)) {
-                        cast(widget, qt.widgets.PushButton).connectClicked(onWidgetClicked);
-                    }
+                    addEventFilterMapping(MouseEvent.MOUSE_DOWN, __onMouseDown);
+                    addEventFilterMapping(MouseEvent.MOUSE_UP, __onMouseUp);
                 }
+                
+            case MouseEvent.MOUSE_OVER:    
+                addEventFilterMapping(MouseEvent.MOUSE_OVER, listener);
+                
+            case MouseEvent.MOUSE_OUT:    
+                addEventFilterMapping(MouseEvent.MOUSE_OUT, listener);
+                
+            case MouseEvent.MOUSE_DOWN:    
+                addEventFilterMapping(MouseEvent.MOUSE_DOWN, listener);
+                
+            case MouseEvent.MOUSE_UP:    
+                addEventFilterMapping(MouseEvent.MOUSE_UP, listener);
         }
     }
     
-    private function onWidgetClicked() {
+    private var __mouseDown:Bool = false;
+    private function __onMouseDown(event:UIEvent) {
+        __mouseDown = true;
+    }
+    
+    private function __onMouseUp(event:UIEvent) {
+        if (__mouseDown == false) {
+            return;
+        }
+        __mouseDown = false;
+        var fn = _eventMap.get(MouseEvent.CLICK);
+        if (fn != null) {
+            var mouseEvent = new MouseEvent(MouseEvent.CLICK);
+            fn(mouseEvent);
+        }
+    }
+    
+    private var _eventFilter:EventFilterProxy;
+    private var _filteredEventMap:Map<Int, String> = null;
+    private function addEventFilterMapping(event:String, listener:UIEvent->Void) {
+        if (widget == null) {
+            return;
+        }
+        if (_eventFilter == null) {
+            _eventFilter = new EventFilterProxy();
+            _eventFilter.onEvent = onEventFilterEvent;
+            widget.eventFilter = _eventFilter;
+        }
+        if (_filteredEventMap == null) {
+            _filteredEventMap = new Map<Int, String>();
+        }
+        
+        if (EventMapper.HAXEUI_TO_QT.exists(event) == false) {
+            trace("WARNING: Event '" + event + "' is not mapped to Qt");
+            return;
+        }
+        
+        if (_eventMap.exists(event) == true) {
+            return;
+        }
+        
+        var qtEventType = EventMapper.HAXEUI_TO_QT.get(event);
+        _filteredEventMap.set(qtEventType, event);
+        _eventMap.set(event, listener);
+    }
+    
+    private function onEventFilterEvent(obj:Object, event:Event):Bool {
+        if (_filteredEventMap == null) {
+            return false;
+        }
+        
+        if (_filteredEventMap.exists(event.type) == false) {
+            return false;
+        }
+        
+        var type = _filteredEventMap.get(event.type);
+        var fn = _eventMap.get(type);
+        if (fn != null) {
+            switch (type) {
+                case MouseEvent.MOUSE_OVER | MouseEvent.MOUSE_OUT | MouseEvent.MOUSE_DOWN | MouseEvent.MOUSE_UP:
+                    var mouseEvent = new MouseEvent(type);
+                    fn(mouseEvent);
+            }
+        }
+        
+        return false;
+    }
+    
+    private function onMouseClickedSlot() {
         var fn = _eventMap.get(MouseEvent.CLICK);
         if (fn != null) {
             var newMouseEvent = new MouseEvent(MouseEvent.CLICK);
