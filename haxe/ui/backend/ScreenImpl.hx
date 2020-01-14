@@ -27,7 +27,6 @@ class ScreenImpl extends ScreenBase {
     
     private function onMainWindowResized() {
         for (c in _topLevelComponents) {
-            trace("----------------------------- RESIZE");
             resizeComponent(c);
         }
     }
