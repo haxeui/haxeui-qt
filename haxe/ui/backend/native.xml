@@ -70,4 +70,12 @@
     <component id="haxe.ui.containers.TabView" class="qt.widgets.TabWidget">
         <size class="haxe.ui.backend.qt.size.TabWidgetSize" includePadding="false" />
     </component>    
+    <component id="haxe.ui.components.DropDown" class="qt.widgets.ComboBox" allowChildren="false">
+        <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
+        <behaviour id="text" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="selectedItem" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="disabled" class="haxe.ui.behaviours.DataBehaviour" />
+        <behaviour id="selectedIndex" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="currentIndex" />
+        <behaviour id="dataSource" class="haxe.ui.backend.qt.behaviours.ComboBoxDataSource" />
+    </component>    
 </native>

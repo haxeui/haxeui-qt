@@ -3,7 +3,7 @@ import qt.widgets.TabWidget;
 
 class TabWidgetSize extends WidgetSize {
     private override function get_usableWidthModifier():Float {
-        return 15; // TODO: calc
+        return 3; // TODO: calc
     }
     
     private override function get_usableHeightModifier():Float {
