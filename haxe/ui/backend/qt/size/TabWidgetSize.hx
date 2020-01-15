@@ -1,4 +1,5 @@
 package haxe.ui.backend.qt.size;
+import haxe.ui.core.Screen;
 import qt.widgets.TabWidget;
 
 class TabWidgetSize extends WidgetSize {

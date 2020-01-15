@@ -11,6 +11,8 @@ import haxe.ui.styles.Style;
 import qt.core.Event;
 import qt.core.Object;
 import qt.proxy.EventFilterProxy;
+import qt.widgets.Menu;
+import qt.widgets.MenuBar;
 import qt.widgets.ScrollArea;
 import qt.widgets.TabWidget;
 import qt.widgets.Widget;
@@ -60,27 +62,56 @@ class ComponentImpl extends ComponentBase {
         var className:String = Type.getClassName(Type.getClass(this));
         var nativeComponentClass:String = Toolkit.nativeConfig.query('component[id=${className}].@class', 'qt.widgets.Widget', this);
         
+        // TODO: make all this flexible (like it is in haxeui-hxwidgets)
         var initializers:String = null;
         if (className == "haxe.ui.containers.ListView" && (cast(this, Component).native == false || cast(this, Component).native == null)) {
             nativeComponentClass = "qt.widgets.ScrollArea";
             initializers = "haxe.ui.backend.qt.initializers.ScrollAreaInitializer";
         }
         
-        var params = [];
-        widget = Type.createInstance(Type.resolveClass(nativeComponentClass), params);
-        if (setParent == true) {
-            widget.parent = parent;
+        // TODO: make all this flexible (like it is in haxeui-hxwidgets)
+        if (className == "haxe.ui.containers.menus.MenuBar") {
+            widget = Screen.instance.mainWindow.menuBar;
+            Screen.instance.hasMenuBar = true;
+        } else if (className == "haxe.ui.containers.menus.Menu") {
+            if (parentComponent != null && Std.is(parentComponent.widget, MenuBar)) {
+                widget = cast(parentComponent.widget, MenuBar).addMenu(this.text);
+                setParent = false;
+            } else if (parentComponent != null && Std.is(parentComponent.widget, Menu)) {
+                widget = cast(parentComponent.widget, Menu).addMenu(this.text);
+                setParent = false;
+            }
+        } else if (className == "haxe.ui.containers.menus.MenuItem") {
+            if (parentComponent != null && Std.is(parentComponent.widget, Menu)) {
+                cast(parentComponent.widget, Menu).addAction(this.text);
+                setParent = false;
+                nativeComponentClass = null;
+            }
+        } else if (className == "haxe.ui.containers.menus.MenuSeparator") {
+            if (parentComponent != null && Std.is(parentComponent.widget, Menu)) {
+                cast(parentComponent.widget, Menu).addSeparator();
+                setParent = false;
+                nativeComponentClass = null;
+            }
         }
         
-        initializers = Toolkit.nativeConfig.query('component[id=${className}].@initializers', initializers, this);       
-        if (initializers != null) {
-            for (i in initializers.split(";")) {
-                i = StringTools.trim(i);
-                if (i.length == 0) {
-                    continue;
+        if (widget == null && nativeComponentClass != null) {
+            var params = [];
+            widget = Type.createInstance(Type.resolveClass(nativeComponentClass), params);
+            if (setParent == true) {
+                widget.parent = parent;
+            }
+            
+            initializers = Toolkit.nativeConfig.query('component[id=${className}].@initializers', initializers, this);       
+            if (initializers != null) {
+                for (i in initializers.split(";")) {
+                    i = StringTools.trim(i);
+                    if (i.length == 0) {
+                        continue;
+                    }
+                    var instance:Initializer = Type.createInstance(Type.resolveClass(i), []);
+                    instance.run(this);
                 }
-                var instance:Initializer = Type.createInstance(Type.resolveClass(i), []);
-                instance.run(this);
             }
         }
         
@@ -111,6 +142,10 @@ class ComponentImpl extends ComponentBase {
             return;
         }
         
+        if (Std.is(widget, MenuBar)) {
+            return;
+        }
+        
         widget.move(Std.int(left), Std.int(top));
     }
     
@@ -131,6 +166,10 @@ class ComponentImpl extends ComponentBase {
             return;
         }
 
+        if (Std.is(widget, MenuBar)) {
+            return;
+        }
+        
         //trace(">>>> setting " + this + "(" + this.id + ")" + " to " + width + "x" + height);
         
         var w:Int = Std.int(width);

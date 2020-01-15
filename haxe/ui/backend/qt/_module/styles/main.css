@@ -2,7 +2,12 @@
     native: true;
 }
 
-.button, .progress, .slider, .vertical-slider, .horizontal-slider, .vertical-progress, .horizontal-progress, .scrollview, .scrollview-contents, .tabview, .tabview-content {
+.button, .progress, .slider,
+.vertical-slider, .horizontal-slider,
+.vertical-progress, .horizontal-progress,
+.scrollview, .scrollview-contents,
+.tabview, .tabview-content,
+.menubar, .menu, .menu-item {
     background: none;
     border: none;
     border-radius: none;
