@@ -166,7 +166,7 @@ class ComponentImpl extends ComponentBase {
             return;
         }
 
-        if (Std.is(widget, MenuBar)) {
+        if (Std.is(widget, MenuBar) || Std.is(widget, Menu)) { // we dont want menus to be sized by haxeui
             return;
         }
         
