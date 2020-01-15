@@ -62,7 +62,7 @@
         <behaviour id="end" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
         <behaviour id="indeterminate" class="haxe.ui.behaviours.DataBehaviour" />
         <behaviour id="pos" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="value" />
-        </component>    
+    </component>    
     <component id="haxe.ui.containers.ScrollView" class="qt.widgets.ScrollArea" initializers="haxe.ui.backend.qt.initializers.ScrollAreaInitializer">
         <builder111 class="haxe.ui.backend.qt.builders.ScrollViewBuilder" />
         <behaviour id="contentLayoutName" class="haxe.ui.behaviours.DefaultBehaviour" />
@@ -72,8 +72,8 @@
         <size class="haxe.ui.backend.qt.size.WidgetSize" includePadding="false" />
         <behaviour id="contentLayoutName" class="haxe.ui.behaviours.DefaultBehaviour" />
         <behaviour id="dataSource" class="haxe.ui.backend.qt.behaviours.ListWidgetDataSource" />
-        <behaviour id="selectedIndex" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="selectedRow" />
-        <size111 class="haxe.ui.backend.qt.size.ScrollAreaSize" includePadding="false" />
+        <behaviour id="selectedIndex" class="haxe.ui.backend.qt.behaviours.ReflectProperty" targetProperty="selectedRow" autoDispatch="haxe.ui.events.UIEvent.CHANGE" />
+        <signal id="change" slot="connectItemSelectionChanged" mapTo="onChangedSlot" />
     </component>    
     <component id="haxe.ui.containers.TabView" class="qt.widgets.TabWidget">
         <size class="haxe.ui.backend.qt.size.TabWidgetSize" includePadding="false" />

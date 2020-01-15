@@ -203,14 +203,16 @@ class ComponentImpl extends ComponentBase {
             return;
         }
         
-        var className:String = Type.getClassName(Type.getClass(this));
-        var slot:String = Toolkit.nativeConfig.query('component[id=${className}].signal[id=${type}].@slot', null, this); 
-        if (slot != null) {
-            var mapTo:String = Toolkit.nativeConfig.query('component[id=${className}].signal[id=${type}].@mapTo', null, this); 
-            if (mapTo != null) {
-                if (_eventMap.exists(type) == false) {
-                    _eventMap.set(type, listener);
-                    Reflect.callMethod(widget, Reflect.field(widget, slot), [Reflect.field(this, mapTo)]);
+        if (cast(this, Component).native == true) {
+            var className:String = Type.getClassName(Type.getClass(this));
+            var slot:String = Toolkit.nativeConfig.query('component[id=${className}].signal[id=${type}].@slot', null, this); 
+            if (slot != null) {
+                var mapTo:String = Toolkit.nativeConfig.query('component[id=${className}].signal[id=${type}].@mapTo', null, this); 
+                if (mapTo != null) {
+                    if (_eventMap.exists(type) == false) {
+                        _eventMap.set(type, listener);
+                        Reflect.callMethod(widget, Reflect.field(widget, slot), [Reflect.field(this, mapTo)]);
+                    }
                 }
             }
         }
@@ -308,8 +310,16 @@ class ComponentImpl extends ComponentBase {
     private function onMouseClickedSlot() {
         var fn = _eventMap.get(MouseEvent.CLICK);
         if (fn != null) {
-            var newMouseEvent = new MouseEvent(MouseEvent.CLICK);
-            fn(newMouseEvent);
+            var event = new MouseEvent(MouseEvent.CLICK);
+            fn(event);
+        }
+    }
+    
+    private function onChangedSlot() {
+        var fn = _eventMap.get(UIEvent.CHANGE);
+        if (fn != null) {
+            var event = new UIEvent(UIEvent.CHANGE);
+            fn(event);
         }
     }
 }
