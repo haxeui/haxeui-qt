@@ -170,20 +170,12 @@ class ComponentImpl extends ComponentBase {
             return;
         }
         
-        //trace(">>>> setting " + this + "(" + this.id + ")" + " to " + width + "x" + height);
-        
         var w:Int = Std.int(width);
         var h:Int = Std.int(height);
         
         widget.resize(w, h);
-
-        if (this.parentComponent != null && Std.is(this.parentComponent.widget, ScrollArea)) { // special case for scrollarea
-            //cast(this.parentComponent.widget, ScrollArea).widget.adjustSize();
-            //this.parentComponent.invalidateComponent();
-        }
-        if (Std.is(this.widget, ScrollArea)) { // special case for scrollarea
-            //cast(this.widget, ScrollArea).widget.adjustSize();
-        }
+        // This is to stop qt resizing things again (like when you click a big button) - may be ill concieved
+        widget.setFixedSize(w, h);
     }
 
     private override function applyStyle(style:Style) {

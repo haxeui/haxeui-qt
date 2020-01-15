@@ -15,7 +15,7 @@ class AppImpl extends AppBase {
     }
     
     private override function build() {
-        var theme = Toolkit.backendProperties.getProp("haxe.ui.qt.theme", null);
+        var theme = Toolkit.backendProperties.getProp("haxe.ui.qt.theme", "Fusion");
         if (theme != null) {
             Application.style = StyleFactory.create(theme);
         }
@@ -25,9 +25,16 @@ class AppImpl extends AppBase {
     
     private override function init(onReady:Void->Void, onEnd:Void->Void = null) {
         _onEnd = onEnd;
-        var windowWidth:Int = Toolkit.backendProperties.getPropInt("haxe.ui.qt.main.window.width", 800);
-        var windowHeight:Int = Toolkit.backendProperties.getPropInt("haxe.ui.qt.main.window.height", 600);
-        _mainWindow.resize(windowWidth, windowHeight);
+        var fit = Toolkit.backendProperties.getPropBool("haxe.ui.qt.main.window.fit", false);
+        if (fit == true) {
+            haxe.ui.util.Timer.delay(function() {
+                Screen.instance.resizeToContents();
+            }, 0);
+        } else {
+            var windowWidth:Int = Toolkit.backendProperties.getPropInt("haxe.ui.qt.main.window.width", 800);
+            var windowHeight:Int = Toolkit.backendProperties.getPropInt("haxe.ui.qt.main.window.height", 600);
+            _mainWindow.resize(windowWidth, windowHeight);
+        }
         
         var title = Toolkit.backendProperties.getProp("haxe.ui.qt.main.window.title");
         if (title != null) {

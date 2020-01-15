@@ -15,6 +15,28 @@ class ScreenImpl extends ScreenBase {
         return mainWindow.width;
     }
     
+    public function resizeToContents() {
+        var w:Float = -1;
+        var h:Float = -1;
+        for (c in _topLevelComponents) {
+            if (c.width > w) {
+                w = c.width;
+            }
+            if (c.height > h) {
+                h = c.height;
+            }
+        }
+        
+        if (w != -1 && h != -1) {
+            centralWidget.setMinimumSize(Std.int(w), Std.int(h));
+            centralWidget.resize(Std.int(w), Std.int(h));
+            centralWidget.adjustSize();
+            haxe.ui.util.Timer.delay(function() {
+                centralWidget.setMinimumSize(0, 0);
+            }, 0);
+        }
+    }
+    
     public override function get_height():Float {
         if (hasMenuBar == true) {
             return mainWindow.height - 20; // TODO: calc
